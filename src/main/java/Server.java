@@ -8,30 +8,45 @@ import java.util.Scanner;
 
 public class Server {
 
-    ArrayList<Thread> threadPool = new ArrayList<>();
-
-    static ServerSocket server;
+    private static Server server;
 
     static {
         try {
-            server = new ServerSocket(1234);
+            server = new Server();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    //Array that accumulate all threads
+    ArrayList<Thread> threadPool = new ArrayList<>();
 
+    static ServerSocket serverSock;
+
+    static {
+        try {
+            serverSock = new ServerSocket(1234);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Constructor of Server
     public Server() throws IOException {
     }
 
-    public void startServer() throws IOException {
+    public static Server getServer(){
+        return server;
+    }
+
+    public void startServer(){
 
         Thread collectingThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (true) {
-                        Socket conectedSock = server.accept();
+                        Socket conectedSock = serverSock.accept();
                         threadPool.add(new Thread(new ConectionFabric(conectedSock)));
                         threadPool.get(threadPool.size()-1).start();
                         ConectionFabric.conectionCount=ConectionFabric.conectionCount+1;
