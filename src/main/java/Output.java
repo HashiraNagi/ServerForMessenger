@@ -1,11 +1,14 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Output implements Runnable{
 
     OutputStream Sout;
     DataOutputStream out;
+    Lock lock = new ReentrantLock();
 
     String temp="";
 
@@ -16,17 +19,19 @@ public class Output implements Runnable{
 
     }
 
-    private void output() throws IOException {
+    private void output() throws IOException, InterruptedException {
 
         Scanner scan = new Scanner(System.in);
 
-//        out.writeUTF("qqqww");
 
-            if (TempDataHolder.inputData != null && temp != TempDataHolder.inputData) {
-                out.writeUTF(TempDataHolder.inputData);
-            }
+//                synchronized (TempDataHolder.lock) {
+                    out.writeUTF(TempDataHolder.inputData);
+//                    System.out.println("BROOOOOOO");
+                    temp = TempDataHolder.inputData;
+//                    TempDataHolder.lock.notify();
+//                }
+//        temp != TempDataHolder.inputData
 
-        temp = TempDataHolder.inputData;
 
     }
 
@@ -34,10 +39,17 @@ public class Output implements Runnable{
     public void run() {
 
         try {
+            System.out.println("eee");
             while (true) {
+//                TempDataHolder.lock.lock();
+
                 output();
+//                System.out.println("eee");
+
+//                TempDataHolder.lock.unlock();
+
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 

@@ -8,7 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Input implements Runnable{
     InputStream Sin;
     DataInputStream in;
-    Lock lock = new ReentrantLock();
+
+    static boolean xx;
+
 
     Input(Socket sock) throws IOException {
 
@@ -18,23 +20,31 @@ public class Input implements Runnable{
 
     }
 
-    private void input() throws IOException {
-        while (true) {
+    private void input() throws IOException, InterruptedException {
 
-            TempDataHolder.inputData = in.readUTF();
-            System.out.println(TempDataHolder.inputData);
+//            synchronized (TempDataHolder.lock) {
+//                TempDataHolder.lock.wait();
+//                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                TempDataHolder.inputData = in.readUTF();
+                System.out.println(TempDataHolder.inputData);
+//                TempDataHolder.lock.notify();
+//            }
 
-        }
+
     }
 
     @Override
     public void run() {
 
         try {
-            lock.lock();
-            input();
-            lock.unlock();
-        } catch (IOException e) {
+            while (true) {
+//                TempDataHolder.lock.lock();
+                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                input();
+                System.out.println(TempDataHolder.inputData);
+//                TempDataHolder.lock.unlock();
+            }
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
