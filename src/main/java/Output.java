@@ -22,7 +22,7 @@ public class Output implements Runnable{
     private void output() throws IOException, InterruptedException {
 
 
-                    if(TempDataHolder.inputData.equals(temp)) {
+                    if(TempDataHolder.inputData != temp) {
                         out.writeUTF(TempDataHolder.inputData);
                         temp = TempDataHolder.inputData;
                     }
@@ -33,12 +33,16 @@ public class Output implements Runnable{
     public void run() {
 
         try {
+
+//            Lock lock = Server.lockPool.get(ConectionFabric.conectionCount-1);
+
             while (true) {
-                synchronized (TempDataHolder.lock) {
+//                synchronized (lock) {
                     output();
-                    TempDataHolder.lock.notify();
-                }
+//                    lock.notify();
+//                }
             }
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

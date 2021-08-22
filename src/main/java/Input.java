@@ -17,19 +17,23 @@ public class Input implements Runnable{
     }
 
     private void input() throws IOException, InterruptedException {
-                TempDataHolder.inputData = in.readUTF();
-                System.out.println(TempDataHolder.inputData);
+
+            TempDataHolder.inputData = in.readUTF();
+            System.out.println(TempDataHolder.inputData);
     }
 
     @Override
     public void run() {
 
         try {
+
+//            Lock lock = Server.lockPool.get(ConectionFabric.conectionCount-1);
+
             while (true) {
-                synchronized (TempDataHolder.lock) {
+//                synchronized (lock) {
                     input();
-                    TempDataHolder.lock.wait();
-                }
+//                    lock.wait();
+//                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
 
@@ -20,6 +22,8 @@ public class Server {
 
     //Array that accumulate all threads
     ArrayList<Thread> threadPool = new ArrayList<>();
+
+    static ArrayList<Lock> lockPool = new ArrayList<>();
 
     static ServerSocket serverSock;
 
@@ -48,6 +52,7 @@ public class Server {
                     while (true) {
                         Socket conectedSock = serverSock.accept();
                         threadPool.add(new Thread(new ConectionFabric(conectedSock)));
+                        lockPool.add(new ReentrantLock());
                         threadPool.get(threadPool.size()-1).start();
                         ConectionFabric.conectionCount=ConectionFabric.conectionCount+1;
                         System.out.println(ConectionFabric.conectionCount);
