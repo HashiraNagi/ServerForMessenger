@@ -21,17 +21,11 @@ public class Output implements Runnable{
 
     private void output() throws IOException, InterruptedException {
 
-        Scanner scan = new Scanner(System.in);
 
-
-//                synchronized (TempDataHolder.lock) {
-                    out.writeUTF(TempDataHolder.inputData);
-//                    System.out.println("BROOOOOOO");
-                    temp = TempDataHolder.inputData;
-//                    TempDataHolder.lock.notify();
-//                }
-//        temp != TempDataHolder.inputData
-
+                    if(TempDataHolder.inputData.equals(temp)) {
+                        out.writeUTF(TempDataHolder.inputData);
+                        temp = TempDataHolder.inputData;
+                    }
 
     }
 
@@ -39,15 +33,11 @@ public class Output implements Runnable{
     public void run() {
 
         try {
-            System.out.println("eee");
             while (true) {
-//                TempDataHolder.lock.lock();
-
-                output();
-//                System.out.println("eee");
-
-//                TempDataHolder.lock.unlock();
-
+                synchronized (TempDataHolder.lock) {
+                    output();
+                    TempDataHolder.lock.notify();
+                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
