@@ -5,21 +5,38 @@ import java.net.Socket;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Input implements Runnable{
+public class Input  implements Runnable{
+
     InputStream Sin;
     DataInputStream in;
+    boolean isOnline;
+
+    int serialNumber;
 
     Input(Socket sock) throws IOException {
 
         Sin = sock.getInputStream();
         in = new DataInputStream(Sin);
+        isOnline = true;
+        serialNumber = ConectionFabric.conectionCount;
 
     }
 
-    private void input() throws IOException, InterruptedException {
+    private void input() throws InterruptedException {
+            try {
+                TempDataHolder.inputData = in.readUTF();
+            }
+            catch (IOException e){
+                System.out.println("Client disconnected");
+                TempDataHolder.disconnectNumber = "disconnected"+serialNumber;
+                isOnline = false;
 
-            TempDataHolder.inputData = in.readUTF();
+            }
             System.out.println(TempDataHolder.inputData);
+    }
+
+    boolean getOnlineStatus(){
+        return isOnline;
     }
 
     @Override
@@ -31,11 +48,14 @@ public class Input implements Runnable{
 
             while (true) {
 //                synchronized (lock) {
+                if(!isOnline){
+                    break;
+                }
                     input();
 //                    lock.wait();
 //                }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

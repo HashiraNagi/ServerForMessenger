@@ -9,6 +9,7 @@ public class Output implements Runnable{
     OutputStream Sout;
     DataOutputStream out;
     Lock lock = new ReentrantLock();
+    int serialNumber;
 
     String temp="";
 
@@ -16,6 +17,7 @@ public class Output implements Runnable{
 
          Sout = sock.getOutputStream();
          out = new DataOutputStream(Sout);
+         serialNumber = ConectionFabric.conectionCount;
 
     }
 
@@ -26,6 +28,7 @@ public class Output implements Runnable{
                         out.writeUTF(TempDataHolder.inputData);
                         temp = TempDataHolder.inputData;
                     }
+
 
     }
 
@@ -38,6 +41,10 @@ public class Output implements Runnable{
 
             while (true) {
 //                synchronized (lock) {
+
+                if(TempDataHolder.disconnectNumber.equals("disconnected"+serialNumber)){
+                    break;
+                }
                     output();
 //                    lock.notify();
 //                }
