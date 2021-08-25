@@ -23,8 +23,6 @@ public class Server {
     //Array that accumulate all threads
     ArrayList<Thread> threadPool = new ArrayList<>();
 
-//    static ArrayList<Lock> lockPool = new ArrayList<>();
-
     static ServerSocket serverSock;
 
     static {
@@ -46,14 +44,11 @@ public class Server {
     public void startServer() throws IOException {
 
                     while (true) {
-                        ConectionFabric.lock.lock();
                         Socket conectedSock = serverSock.accept();
                         threadPool.add(new Thread(new ConectionFabric(conectedSock)));
-//                        lockPool.add(new ReentrantLock());
                         threadPool.get(threadPool.size()-1).start();
                         ConectionFabric.conectionCount=ConectionFabric.conectionCount+1;
                         System.out.println(ConectionFabric.conectionCount);
-                        ConectionFabric.lock.unlock();
                     }
             }
         }

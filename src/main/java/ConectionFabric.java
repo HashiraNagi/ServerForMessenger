@@ -11,7 +11,6 @@ public class ConectionFabric implements Runnable{
     Socket socket;
     boolean isOnline;
 
-    static Lock lock = new ReentrantLock();
 
     ConectionFabric(Socket sock) {
 

@@ -8,6 +8,6 @@ public class TempDataHolder {
     static volatile String disconnectNumber="-1";
 
     static volatile String inputData = "test\n";
-//    static String outputData;
+
 
 }

@@ -44,16 +44,14 @@ public class Input  implements Runnable{
 
         try {
 
-//            Lock lock = Server.lockPool.get(ConectionFabric.conectionCount-1);
 
             while (true) {
-//                synchronized (lock) {
+
                 if(!isOnline){
                     break;
                 }
                     input();
-//                    lock.wait();
-//                }
+
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

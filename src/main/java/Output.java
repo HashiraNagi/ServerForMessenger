@@ -37,17 +37,13 @@ public class Output implements Runnable{
 
         try {
 
-//            Lock lock = Server.lockPool.get(ConectionFabric.conectionCount-1);
-
             while (true) {
-//                synchronized (lock) {
 
                 if(TempDataHolder.disconnectNumber.equals("disconnected"+serialNumber)){
                     break;
                 }
                     output();
-//                    lock.notify();
-//                }
+
             }
 
         } catch (IOException | InterruptedException e) {
